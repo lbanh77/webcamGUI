@@ -20,22 +20,25 @@ class Thread(QThread):
 
     def run(self):
         while (True):
-            ret, frame = cap.read()
-            rgbFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            try: 
+                ret, frame = cap.read()
+                rgbFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            # apply canny edge detector
-            edge = auto_canny(cap.read()[1])
+                # apply canny edge detector
+                edge = auto_canny(cap.read()[1])
 
-            # change b&w to 3 colored channel
-            edge_3_channel = cv2.cvtColor(edge, cv2.COLOR_GRAY2BGR)
+                # change b&w to 3 colored channel
+                edge_3_channel = cv2.cvtColor(edge, cv2.COLOR_GRAY2BGR)
 
-            # horizontally stack original side by side with edge detector
-            rgbStack = np.hstack((rgbFrame, edge_3_channel))
+                # horizontally stack original side by side with edge detector
+                rgbStack = np.hstack((rgbFrame, edge_3_channel))
 
-            # convert to readable format for Qt
-            convertToQtFormat = QImage(rgbStack.data, rgbStack.shape[1], rgbStack.shape[0], QImage.Format_RGB888)
-            p = convertToQtFormat.scaled(640*2, 480*2, Qt.KeepAspectRatio)
-            self.changePixmap.emit(p)
+                # convert to readable format for Qt
+                convertToQtFormat = QImage(rgbStack.data, rgbStack.shape[1], rgbStack.shape[0], QImage.Format_RGB888)
+                p = convertToQtFormat.scaled(640*2, 480*2, Qt.KeepAspectRatio)
+                self.changePixmap.emit(p)
+            except: 
+                self.th.quit()
 
 class camera(QWidget):
     def __init__(self):
@@ -47,7 +50,6 @@ class camera(QWidget):
         self.height = 480
         self.cameraUI()
         self.startCameraThread()
-        # self.stopCameraThread()
 
     @pyqtSlot(QImage)
 
@@ -59,6 +61,7 @@ class camera(QWidget):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.resize(1300, 600)
+
         # create a label
         self.label = QLabel(self)
         self.label.move(10, -150)
@@ -68,10 +71,17 @@ class camera(QWidget):
         camera_button.clicked.connect(self.click_picture)
 
     def startCameraThread(self):
+        print("starting thread")
         self.th = Thread(self)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
         self.show()
+
+    def stopCameraThread(self):
+        print("stopping thread")
+        self.th.changePixmap.disconnect(self.setImage)
+        self.th.quit()
+        self.th.wait()
 
     def click_picture(self):
         # take picture of frame and save it into original and edge (png format)
