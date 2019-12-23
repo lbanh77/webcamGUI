@@ -55,6 +55,7 @@ class camera(QWidget):
         self.label.setPixmap(QPixmap.fromImage(image))
 
     def cameraUI(self):
+        # create window
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.resize(1300, 600)
@@ -73,6 +74,7 @@ class camera(QWidget):
         self.show()
 
     def click_picture(self):
+        # take picture of frame and save it into original and edge (png format)
         frame = cap.read()[1]
         edge = auto_canny(cap.read()[1])
         cv2.imwrite("original.png", frame)
