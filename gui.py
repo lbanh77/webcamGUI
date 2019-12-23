@@ -1,3 +1,8 @@
+# Author: Linda Banh
+# Last Updated: 12/22/19
+# The purpose of this GUI is to display a webcam feed and another frame of the live feed with 
+# an edge detection filter applied. Capture is used to save the images seen. 
+
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *

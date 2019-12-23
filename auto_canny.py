@@ -1,3 +1,8 @@
+# Author: Linda Banh
+# The purpose of this code is to use automatically detect bounds for canny thresholds. 
+# This code was modified and adapted from this article: 
+# https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/
+
 import numpy as np 
 import cv2 
 
