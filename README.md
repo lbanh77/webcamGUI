@@ -4,7 +4,7 @@
 Press 'Capture' to save the images seen on the screen. They will be saved in the same
 working directory. 
 </p>
-<h3> Instructions on how to use this GUI </h3>
+<h2> Instructions on how to use this GUI </h2>
 <p> First, please clone this repository. </p>
 <code>git clone https://github.com/lbanh77/webcamGUI.git</code> 
 
